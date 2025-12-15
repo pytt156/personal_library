@@ -12,7 +12,7 @@ db.init_db()
 st.title("Personal Library")
 
 with st.expander("Import Excel"):
-    uploaded_file = st.file_uploader("Upload Excel file", type=["xlsx"])
+    uploaded_file = st.file_uploader("Upload Excel file", type=["xlsx", "xls"])
 
     if uploaded_file is not None:
         temp_path = Path("data/_upload.xlsx")
@@ -64,12 +64,13 @@ if query:
     ]
 
 for book in books:
-    cols = st.columns([4, 3, 1, 1, 2, 1])
+    cols = st.columns([3, 3, 1, 2, 2, 1])
     cols[0].write(book.title)
     cols[1].write(book.author or "")
     cols[2].write(book.year or "")
-    cols[3].write(book.isbn or "")
+    cols[3].write(book.collection or "")
     cols[4].write(book.notes or "")
+
 
     if cols[5].button("Delete", key=f"del_{book.id}"):
         db.delete_book(book.id)

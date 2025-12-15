@@ -10,6 +10,8 @@ class Book:
     year: Optional[int]
     isbn: Optional[str]
     notes: Optional[str]
+    collection: Optional[str]
+
 
 
 def normalize_str(value: Optional[str]) -> Optional[str]:
@@ -27,14 +29,14 @@ def parse_year(value) -> Optional[int]:
     except ValueError:
         return None
 
-
 def create_book(
     *,
     title: str,
     author: Optional[str] = None,
     year=None,
-    isbn: Optional[str],
+    isbn: Optional[str] = None,
     notes: Optional[str] = None,
+    collection: Optional[str] = None,
     book_id: Optional[int] = None,
 ) -> Book:
     title = normalize_str(title)
@@ -48,4 +50,5 @@ def create_book(
         year=parse_year(year),
         isbn=normalize_str(isbn),
         notes=normalize_str(notes),
+        collection=normalize_str(collection),
     )

@@ -9,4 +9,5 @@ dependencies = [
     "pandas>=2.3.3",
     "ruff>=0.14.9",
     "streamlit>=1.52.1",
+    "xlrd>=2.0.2",
 ]

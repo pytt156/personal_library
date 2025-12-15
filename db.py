@@ -18,14 +18,14 @@ def init_db() -> None:
     with get_connection() as conn:
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS books
-            (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title VARCHAR NOT NULL,
-            author VARCHAR,
-            year INTEGER,
-            isbn VARCHAR,
-            notes VARCHAR
+            CREATE TABLE IF NOT EXISTS books (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                author TEXT,
+                year INTEGER,
+                isbn TEXT,
+                notes TEXT,
+                collection TEXT
             );
             """
         )
@@ -35,15 +35,15 @@ def insert_book(book: Book) -> int:
     with get_connection() as conn:
         cursor = conn.execute(
             """
-            INSERT INTO books (title, author, year, isbn, notes)
-            VALUES (?,?,?,?,?)
+            INSERT INTO books (title, author, year, isbn, notes, collection)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (book.title, book.author, book.year, book.isbn, book.notes),
+            (book.title, book.author, book.year, book.isbn, book.notes, book.collection),
         )
         return cursor.lastrowid
 
 
-def row_to_book(row: sqlite3.row) -> Book:
+def row_to_book(row: sqlite3.Row) -> Book:
     return Book(
         id=row["id"],
         title=row["title"],
@@ -51,6 +51,7 @@ def row_to_book(row: sqlite3.row) -> Book:
         year=row["year"],
         isbn=row["isbn"],
         notes=row["notes"],
+        collection=row["collection"],
     )
 
 
