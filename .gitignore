@@ -208,5 +208,7 @@ __marimo__/
 
 #SQLite
 *.db
+
+# Excel
 *.xlsx
 *.xls
