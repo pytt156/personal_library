@@ -32,6 +32,9 @@ with st.expander("Add book"):
         year = st.text_input("Year")
         isbn = st.text_input("ISBN")
         notes = st.text_input("Notes")
+        genre = st.text_input("Genre")
+        format = st.selectbox("Format", ["", "Inbunden", "Pocket", "E-bok"])
+        last_read = st.text_input("Last read (YYYY-MM)")
 
         submitted = st.form_submit_button("Add")
 
@@ -53,25 +56,32 @@ st.subheader("Library")
 
 query = st.text_input("Search (title or author)").lower()
 
-books = db.get_all_books()
+rows = db.get_books_with_primary_collection()
 
-if query:
-    books = [
-        b
-        for b in books
-        if query in b.title.lower()
-        or (b.author and query in b.author.lower())
-    ]
+for row in rows:
+    title = row["title"]
+    author = row["author"] or ""
+    year = row["year"] or ""
+    collection = row["primary_collection"] or ""
+    genre = row["genre"] or ""
+    book_format = row["format"] or ""
+    last_read = row["last_read"] or ""
+    notes = row["notes"] or ""
 
-for book in books:
-    cols = st.columns([3, 3, 1, 2, 2, 1])
-    cols[0].write(book.title)
-    cols[1].write(book.author or "")
-    cols[2].write(book.year or "")
-    cols[3].write(book.collection or "")
-    cols[4].write(book.notes or "")
+    if query and query not in title.lower() and query not in author.lower():
+        continue
 
+    cols = st.columns([3, 3, 1, 2, 2, 2, 2, 2, 1])
 
-    if cols[5].button("Delete", key=f"del_{book.id}"):
-        db.delete_book(book.id)
+    cols[0].write(title)
+    cols[1].write(author)
+    cols[2].write(year)
+    cols[3].write(collection)
+    cols[4].write(genre)
+    cols[5].write(book_format)
+    cols[6].write(last_read)
+    cols[7].write(notes)
+
+    if cols[8].button("Delete", key=f"del_{row['id']}"):
+        db.delete_book(row["id"])
         st.rerun()
